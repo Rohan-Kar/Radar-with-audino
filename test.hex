@@ -1,0 +1,55 @@
+# include "LiquidCrystal.h"  //lcd libary                                       
+LiquidCrystal lcd(2, 3, 4, 5, 6, 7);
+const int echoPin = 11; // Echo Pin of Ultrasonic Sensor
+const int pingPin = 12; // Trigger Pin of Ultrasonic Sensor
+                    
+void setup() 
+{
+  Serial.begin(9600); // Starting Serial Communication
+  pinMode(pingPin, OUTPUT); // initialising pin 3 as output
+  pinMode(echoPin, INPUT); // initialising pin 2 as input
+}
+
+void loop()
+{
+  long duration, inches, cm;
+  
+  digitalWrite(pingPin, LOW);
+  delayMicroseconds(2);
+  
+  digitalWrite(pingPin, HIGH);
+  delayMicroseconds(10);
+  
+  digitalWrite(pingPin, LOW);
+
+  
+  duration = pulseIn(echoPin, HIGH); // using pulsin function to determine total time
+  inches = microsecondsToInches(duration); // calling method
+  cm = microsecondsToCentimeters(duration); // calling method
+  
+  Serial.print("object distance");
+ // Serial.print("in, ");
+  Serial.print(cm);
+  Serial.print("cm");
+  Serial.println();
+  
+  delay(100);
+  lcd.setCursor(0,0);
+  lcd.print("");
+  delay(10);
+  lcd.setCursor(0,1);
+  lcd.print("Distances");
+  lcd.print(cm);
+  lcd.print("cm");
+  delay(100);
+}
+
+long microsecondsToInches(long microseconds) // method to covert microsec to inches 
+{
+ return microseconds / 74 / 2;
+}
+
+long microsecondsToCentimeters(long microseconds) // method to covert microsec to centimeters
+{
+   return microseconds / 29 / 2;
+}
